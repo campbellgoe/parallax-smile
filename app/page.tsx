@@ -82,9 +82,9 @@ export default function HomePage() {
      onPointerUp={handleUp}
      onPointerOut={handleUp}
     >
-      <h1 className="z-99 cursor-pointer text-yellow-500 fixed left-1/2 top-1/2 text-4xl" onClick={() => {
+      <h1 className="z-99 w-[48px] h-[48px] cursor-pointer text-yellow-500 fixed left-1/2 top-1/2 text-4xl" onClick={() => {
 setNow(now => (now + 3000) % (3000*mapNowToEmoji.length))
-      }}>{mapNowToEmoji[Math.floor(now/3000%(3000*mapNowToEmoji.length))]?.[1] || ":)" as string}</h1>
+      }}>{mapNowToEmoji[Math.floor(now/3000%(3000*mapNowToEmoji.length))]?.[1] || "😁" as string}</h1>
    <Parallax
    frame={frame}
    dimensions={[w, h]}
