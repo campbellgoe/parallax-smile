@@ -4,7 +4,7 @@ import { ParallaxItem } from "@/components/ParallaxItem";
 import { PointerEventHandler, useEffect, useState } from "react";
 
 export default function HomePage() {
-  const[score, setScore] = useState(32)
+  // const[score, setScore] = useState(32)
   const [looping, setLooping] = useState(true)
   const [position, setPosition] = useState([0,0])
   
@@ -14,10 +14,10 @@ export default function HomePage() {
     const y = e.pageY;
     setPosition([x, y])
     // setLooping(true)
-    setScore(score => (score+1)%48)
+    // setScore(score => (score+10)%64)
 setSmileys(zs => {
   return [...zs.map(z => {
-    return z-1
+    return z*0.98-0.01
   })]
 })
   }
@@ -27,7 +27,7 @@ setSmileys(zs => {
     const id = setTimeout(() => {
 setPosition([x, y])
 setSmileys(s => {
-      return s.length < (Math.floor((frame/2)%score)) ? [...s, (s.at(-1) || 0)+0.01] : [...s.slice(0, s.length-3), (s.at(-1) || 0)+0.01]
+      return (s.length < 32) ? [...s, (s.at(-1) || 0)+0.01] : [...s.slice(0, s.length-3), (s.at(-1) || 0)+0.01]
   })
     }, 1000/60)
     
@@ -92,7 +92,7 @@ setSmileys(s => {
 
   return (
     <div style={{background: frame % 6000 < 3000 ? "black" : "white",
-      width: '100vw', height: '100dvh'}} onPointerDown={handleDown}
+      width: '100vw', height: '100dvh',}} onPointerDown={handleDown}
      onPointerMove={handleMove}
      onPointerUp={handleUp}
      onPointerOut={handleUp}
