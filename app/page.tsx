@@ -1,5 +1,6 @@
 "use client";
 import Parallax from "@/components/Parallax";
+import { ParallaxItem } from "@/components/ParallaxItem";
 import { PointerEventHandler, useEffect, useState } from "react";
 
 export default function HomePage() {
@@ -13,15 +14,24 @@ export default function HomePage() {
     const y = e.pageY;
     setPosition([x, y])
     // setLooping(true)
+    setScore(score => (score+1)%48)
+setSmileys(zs => {
+  return [...zs.map(z => {
+    return z-1
+  })]
+})
   }
   const handleMove = (e: any) => {
        const x = e.pageX;
     const y = e.pageY;
-    setPosition([x, y])
-    setSmileys(s => {
-      const z = ((w/2-x)+(h/2-y))/2
-      return s.length < (frame%score) ? [...s, z] : [...s.slice(1), z]
+    const id = setTimeout(() => {
+setPosition([x, y])
+setSmileys(s => {
+      return s.length < (Math.floor((frame/2)%score)) ? [...s, (s.at(-1) || 0)+0.01] : [...s.slice(0, s.length-3), (s.at(-1) || 0)+0.01]
   })
+    }, 1000/60)
+    
+    
   }
   const handleUp = (e: any) => {
   // setLooping(false)
@@ -64,17 +74,22 @@ export default function HomePage() {
     z,
     textOverride: (mapNowToEmoji[Math.floor(now/3000%(3000*mapNowToEmoji.length))]?.[1] as string || ""),
     image: {
-      src: "/smile.svg",
+      src: "/Smiley_face_with_rainbow_joy_alpha.png",
       alt: "🙂",
-      width: 80,
-      height: 80,
+      width: 256,
+      height: 256,
       fill: false,
     }
    }
   }
-  const items = smileys.map((index, i, arr) => {
-    return makeSmiley(index/arr.length/2+0.5)
-  })
+
+  const [items, setItems] = useState<ParallaxItem[]>([])
+  useEffect(() => {
+  setItems(smileys.map((index, i, arr) => {
+    return makeSmiley(index/arr.length**0.72+0.5)
+  }))
+  }, [smileys])
+
   return (
     <div style={{background: frame % 6000 < 3000 ? "black" : "white",
       width: '100vw', height: '100dvh'}} onPointerDown={handleDown}
@@ -82,13 +97,14 @@ export default function HomePage() {
      onPointerUp={handleUp}
      onPointerOut={handleUp}
     >
-      <h1 className="z-99 w-[48px] h-[48px] cursor-pointer text-yellow-500 fixed left-1/2 top-1/2 text-4xl" onClick={() => {
-setNow(now => (now + 3000) % (3000*mapNowToEmoji.length))
-      }}>{mapNowToEmoji[Math.floor(now/3000%(3000*mapNowToEmoji.length))]?.[1] || "😁" as string}</h1>
+      
    <Parallax
    frame={frame}
    dimensions={[w, h]}
-   items={items} /></div>
-  );
-  
+   items={items}
+   setItems={setItems} />
+  <button className="z-99 w-[48px] h-[48px] cursor-pointer text-yellow-500 fixed left-1/2 top-1/2 text-4xl" onClick={() => {
+setNow(now => (now + 3000) % (3000*mapNowToEmoji.length))
+      }}>{mapNowToEmoji[Math.floor(now/3000%(3000*mapNowToEmoji.length))]?.[1] || "😁" as string}</button>
+      </div>)
 }
