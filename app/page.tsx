@@ -15,8 +15,8 @@ const pointer = useRef({
   down: false,
 })
   const handleDown = (e: any) => {
-    const x = e.pageX;
-    const y = e.pageY;
+    const x = e.pageX || e.touches?.[0]?.pageX;
+    const y = e.pageY || e.touches?.[0]?.pageY;
     setPosition([x, y])
     pointer.current.down = true
     // setLooping(true)
@@ -29,8 +29,8 @@ const pointer = useRef({
   }
   const handleMove = (e: any) => {
     if(!pointer.current.down) return
-    const x = e.pageX;
-    const y = e.pageY;
+    const x = e.pageX || e.touches?.[0]?.pageX;
+    const y = e.pageY || e.touches?.[0]?.pageY;
     const id = setTimeout(() => {
       setPosition([x, y])
       setSmileys(s => {
