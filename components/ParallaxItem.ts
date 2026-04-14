@@ -1,4 +1,5 @@
 export type ParallaxItem = {
+    type: string;
     x: ()=>number;
     y: ()=>number;
     z: number;
@@ -6,8 +7,8 @@ export type ParallaxItem = {
     image: {
         src: string;
         alt: string;
-        width?: number;
-        height?: number;
+        width: number;
+        height: number;
         fill?: boolean;
     }
 }
