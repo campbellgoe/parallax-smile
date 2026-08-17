@@ -43,9 +43,9 @@ export type EmotionLevels = Record<
   number
 >;
 
-export type Person = {
+export type Entity = {
   id: string;
-
+  type: 'smiley' | 'dynamic' | 'fire'
   x: number;
   y: number;
 
@@ -53,5 +53,6 @@ export type Person = {
   vy: number;
 
   emotions: EmotionLevels;
-  dead?: boolean;
+  isDead?: boolean;
+  intensity?: number;
 };

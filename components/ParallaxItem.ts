@@ -1,9 +1,8 @@
 export type ParallaxItem = {
-    type: string;
     x: number;
     y: number;
     z: number;
-        textOverride?: string;
+    textOverride?: string;
     image: {
         src?: string;
         alt: string;

@@ -1,5 +1,5 @@
 "use client";
-import { type Person } from "@/components/Entities";
+import { type Entity } from "@/components/Entities";
 import Parallax from "@/components/Parallax";
 import { type ParallaxItem } from "@/components/ParallaxItem";
 import { interact } from "@/emotions/interactions";
@@ -10,8 +10,9 @@ import { useEffect, useRef, useState } from "react";
 const collectRandomEmotions = () => {
   return { "joy": Math.random(), "sadness": Math.random(), "fear": Math.random(), "anger": Math.random(), "love": Math.random() }
 }
+const abortController = new AbortController()
 export function updatePeople(
-  people: Person[],
+  people: Entity[],
   width: number,
   height: number,
 ) {
@@ -49,23 +50,23 @@ export function updatePeople(
     person.vy *= 0.98;
 
     if (person.x < 0) {
-      person.x = 0;
-      person.vx *= -1;
+      person.x = width-10;
+      // person.vx *= -1;
     }
 
     if (person.x > width) {
-      person.x = width;
-      person.vx *= -1;
+      person.x = 10;
+      // person.vx *= -1;
     }
 
     if (person.y < 0) {
-      person.y = 0;
-      person.vy *= -1;
+      person.y = height-10;
+      // person.vy *= -1;
     }
 
     if (person.y > height) {
-      person.y = height;
-      person.vy *= -1;
+      person.y = 10;
+      // person.vy *= -1;
     }
   }
 
@@ -80,7 +81,8 @@ export default function HomePage() {
 
   const [smileys, setSmileys] = useState<number[]>([])
 
-  const [happies, setHappies] = useState<(ParallaxItem & Person)[]>([])
+  const [happies, setHappies] = useState<(ParallaxItem & Entity)[]>([])
+  const [fires, setFires] = useState<(ParallaxItem & Entity)[]>([])
   const pointer = useRef({
     down: false,
   })
@@ -88,6 +90,7 @@ export default function HomePage() {
     const x = e.pageX || e.touches?.[0]?.pageX;
     const y = e.pageY || e.touches?.[0]?.pageY;
     setPosition([x, y])
+    console.log('clicked down at ', x, y)
     pointer.current.down = true
   }
   const handleMove = (e: any) => {
@@ -101,6 +104,7 @@ export default function HomePage() {
       setSmileys(s => {
         return (s.length < nAncestors) ? [...s, (s.at(-1) || 0) - 0.01] : [...s.slice(1, s.length - 3), (s.at(-1) || 0) + 0.01]
       })
+      console.log("win")
     }
     // }, 1000 / 60)
 
@@ -116,36 +120,36 @@ export default function HomePage() {
       setEnableSmileWinState(false)
     }
   }, [happies])
-  const [items, setItems] = useState<(ParallaxItem & Person)[]>([])
-  const emoji = ["🙂", "😊", "😄", "😺"]
+  const [items, setItems] = useState<(ParallaxItem & Entity)[]>([])
   const handleUp = (e: any) => {
     if (!pointer.current.down) return
     const x = position[0]
     const y = position[1]
-    setHappies((items) => {
-
-      return [...(items.length > 32 ? items.slice(1) : items), {
-        type: "custom",
-        x,
-        y,
-        z: 0.75,
-        image: {
-          src: "/Smiley_face_with_rainbow_joy_alpha.png",
-          alt: "🙂",
-          width: 256,
-          height: 256,
-          fill: false,
-          draggable: false,
-          enabled: false
-        },
-        dead: false,
-        id: uuidv4(),
-        vx: 0,
-        vy: 0,
-        emotions: collectRandomEmotions()
-      }]
-    })
-
+    
+      setHappies((items) => {
+        const newSmiley = {
+          x,
+          y,
+          z: 0.75,
+          type: 'smiley' as 'smiley',
+          image: {
+            src: "/Smiley_face_with_rainbow_joy_alpha.png",
+            alt: "🙂",
+            width: 256,
+            height: 256,
+            fill: false,
+            draggable: false,
+            enabled: enableSmileWinState
+          },
+          age: 0,
+          isDead: false,
+          id: uuidv4(),
+          vx: 0,
+          vy: 0,
+          emotions: collectRandomEmotions()
+        }
+        return [...(items.length > 32 ? items.slice(1) : items), newSmiley]
+      })
     pointer.current.down = false
   }
   const [w, setW] = useState(900)
@@ -153,7 +157,7 @@ export default function HomePage() {
   const [frame, setFrame] = useState(0)
   const people = happies
   const peopleRef = useRef<
-    (ParallaxItem & Person)[]
+    (ParallaxItem & Entity)[]
   >([]);
   useEffect(() => {
     peopleRef.current = happies;
@@ -184,7 +188,7 @@ export default function HomePage() {
         setW(window.innerWidth)
         setH(window.innerHeight)
       }
-      addEventListener("resize", resize, false)
+      addEventListener("resize", resize, { signal: abortController.signal })
       const loop = () => {
         if (frame % 3 == 0) {
           setHappies((current) =>
@@ -202,26 +206,27 @@ export default function HomePage() {
       }
       requestAnimationFrame(loop)
       return () => {
-        removeEventListener("resize", resize, false)
+        abortController.abort()
+        // removeEventListener("resize", resize, false)
       }
     }
   }, [])
-  const [now, setNow] = useState(0)
-  const happyEmoji = [
-    [0, "🙃"],
-    [3000, "🙂"],
-    [0, "🙃"],
-    [4500, "😊"],
-    [0, "🙃"],
-    [6000, "😄"],
-    [0, "🙃"],
-    [0, "😺"]
-  ]
+  // const [now, setNow] = useState(0)
+  // const happyEmoji = [
+  //   [0, "🙃"],
+  //   [3000, "🙂"],
+  //   [0, "🙃"],
+  //   [4500, "😊"],
+  //   [0, "🙃"],
+  //   [6000, "😄"],
+  //   [0, "🙃"],
+  //   [0, "😺"]
+  // ]
 
   const makeSmiley = (z: number) => {
     console.log('z', z)
     return {
-      type: "dynamic",
+      type: "dynamic" as "dynamic",
       x: position[0],
       y: position[1],
       z,
@@ -234,7 +239,8 @@ export default function HomePage() {
         draggable: false,
         enabled: enableSmileWinState
       },
-      dead: false,
+      age: 0,
+      isDead: false,
       id: uuidv4(),
       vx: Math.random() * 0.1 - 0.05,
       vy: Math.random() * 0.1 - 0.05,
@@ -244,7 +250,7 @@ export default function HomePage() {
   useEffect(() => {
     setItems(smileys.map((z, i, arr) => {
       if (typeof z == 'number') {
-        return makeSmiley(z / (arr.length + 1) ** 0.72 + 0.5)
+        return makeSmiley(z)
       }
       return z
     }))
@@ -268,8 +274,8 @@ export default function HomePage() {
         dimensions={[w, h]}
         items={[...items, ...happies]}
         setItems={setItems} />
-      <button className="z-99 w-[48px] h-[48px] cursor-pointer text-yellow-500 fixed left-1/2 top-1/2 text-4xl" onClick={() => {
+      {/* <button className="z-99 w-[48px] h-[48px] cursor-pointer text-yellow-500 fixed left-1/2 top-1/2 text-4xl" onClick={() => {
         setNow(now => (now + 3000) % (3000 * happyEmoji.length))
-      }}>{happyEmoji[Math.floor(now / 3000 % (3000 * happyEmoji.length))]?.[1] || "😁" as string}</button>
+      }}>{happyEmoji[Math.floor(now / 3000 % (3000 * happyEmoji.length))]?.[1] || "😁" as string}</button> */}
     </div>)
 }
