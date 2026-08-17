@@ -8,7 +8,7 @@ import { distance, getDominantEmotion } from "@/emotions/simulation";
 import { v4 as uuidv4 } from "uuid"
 import { useEffect, useRef, useState } from "react";
 const collectRandomEmotions = () => {
-  return { "joy": Math.random(), "sadness": Math.random(), "fear": Math.random(), "anger": Math.random(), "love": Math.random() }
+  return { "joy": Math.random(), "sadness": Math.random(), "fear": Math.random(), "anger": Math.random(), "love": Math.random(), "fire": Math.random()*0.75, }
 }
 const abortController = new AbortController()
 export function updatePeople(
@@ -130,7 +130,7 @@ export default function HomePage() {
         const newSmiley = {
           x,
           y,
-          z: 0.75,
+          z: 0.94+Math.random()*0.06-0.03,
           type: 'smiley' as 'smiley',
           image: {
             src: "/Smiley_face_with_rainbow_joy_alpha.png",
@@ -146,7 +146,8 @@ export default function HomePage() {
           id: uuidv4(),
           vx: 0,
           vy: 0,
-          emotions: collectRandomEmotions()
+          emotions: collectRandomEmotions(),
+          name: Math.random() > 0.5 ? "Hi": "Hello",
         }
         return [...(items.length > 32 ? items.slice(1) : items), newSmiley]
       })
@@ -244,7 +245,8 @@ export default function HomePage() {
       id: uuidv4(),
       vx: Math.random() * 0.1 - 0.05,
       vy: Math.random() * 0.1 - 0.05,
-      emotions: collectRandomEmotions()
+      emotions: collectRandomEmotions(),
+  name: "Hi"
     }
   }
   useEffect(() => {

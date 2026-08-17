@@ -1,10 +1,10 @@
-import { Person } from "@/components/Entities";
+import { Entity } from "@/components/Entities";
 import { EMOTIONS, getDominantEmotion } from "./simulation";
 import { influenceMatrix } from "./influence";
 
 export function interact(
-  source: Person,
-  target: Person,
+  source: Entity,
+  target: Entity,
 ) {
   const dominant =
     getDominantEmotion(source);

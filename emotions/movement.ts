@@ -1,8 +1,8 @@
-import { Person } from "@/components/Entities";
+import { Entity } from "@/components/Entities";
 import { getDominantEmotion } from "./simulation";
 
 export function updateMovement(
-  person: Person,
+  person: Entity,
 ) {
   const dominant =
     getDominantEmotion(person);
@@ -38,5 +38,14 @@ export function updateMovement(
       person.vx *= 0.99;
       person.vy *= 0.99;
       break;
+
+  case "fire":
+    person.vx *= 0.997
+    person.vy *= 0.997;
+    person.vx +=
+    (Math.random() - 0.5) * 0.025;
+        person.vy +=
+        (Math.random() - 0.5) * 0.025;
+    break;
   }
 }

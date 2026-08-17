@@ -6,6 +6,7 @@ export const influenceMatrix = {
     fear: -0.0001,
     anger: -0.0001,
     love: 0.0001,
+    fire: 0
   },
 
   sadness: {
@@ -14,6 +15,7 @@ export const influenceMatrix = {
     fear: 0.0001,
     anger: 0,
     love: 0.0001,
+    fire: 0
   },
 
   fear: {
@@ -22,6 +24,7 @@ export const influenceMatrix = {
     fear: 0.0003,
     anger: 0.0001,
     love: -0.0001,
+    fire: 0
   },
 
   anger: {
@@ -30,6 +33,7 @@ export const influenceMatrix = {
     fear: 0.0002,
     anger: 0.0003,
     love: -0.0002,
+    fire: 0
   },
 
   love: {
@@ -38,5 +42,14 @@ export const influenceMatrix = {
     fear: -0.0002,
     anger: -0.0002,
     love: 0.0003,
+    fire: 0,
   },
+  fire: {
+    joy: 0,
+    sadness: 0,
+    fear: 0,
+    anger: 0,
+    love: 0,
+    fire: 0.01
+  }
 } as const;

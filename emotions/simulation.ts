@@ -1,4 +1,4 @@
-import { EMOTION_CONFIG, EmotionName, Person } from "../components/Entities";
+import { EMOTION_CONFIG, EmotionName, Entity } from "../components/Entities";
 
 export const EMOTIONS: EmotionName[] = [
   "joy",
@@ -6,6 +6,7 @@ export const EMOTIONS: EmotionName[] = [
   "fear",
   "anger",
   "love",
+  "fire"
 ];
 // export function getDominantEmotion(
 //   person: Person,
@@ -18,7 +19,7 @@ export const EMOTIONS: EmotionName[] = [
 //   );
 // }
 export function getDominantEmotion(
-  person: Person,
+  person: Entity,
 ): EmotionName {
   return EMOTIONS.reduce((highest, emotion) =>
     person.emotions[emotion] >
@@ -29,8 +30,8 @@ export function getDominantEmotion(
 }
 
 export function distance(
-  a: Person,
-  b: Person,
+  a: Entity,
+  b: Entity,
 ) {
   return Math.hypot(
     b.x - a.x,
@@ -39,7 +40,7 @@ export function distance(
 }
 
 export function getEmoji(
-  person: Person,
+  person: Entity,
 ) {
   return EMOTION_CONFIG[
     getDominantEmotion(person)

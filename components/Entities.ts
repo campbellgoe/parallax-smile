@@ -3,7 +3,8 @@ export type EmotionName =
   | "sadness"
   | "fear"
   | "anger"
-  | "love";
+  | "love"
+  | "fire";
 
 export const EMOTION_CONFIG = {
   joy: {
@@ -30,6 +31,10 @@ export const EMOTION_CONFIG = {
     emoji: "🥰",
     color: "#EC407A",
   },
+  fire: {
+    emoji: "vYv",
+    color: "orange"
+  }
 } satisfies Record<
   EmotionName,
   {
@@ -55,4 +60,5 @@ export type Entity = {
   emotions: EmotionLevels;
   isDead?: boolean;
   intensity?: number;
+  name: string;
 };

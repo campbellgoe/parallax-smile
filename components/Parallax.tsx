@@ -27,12 +27,21 @@ const Parallax = ({ dimensions, items, setItems, frame }: {
             height: img.height,
             fill: img.fill
         }
+        let emoji = getEmoji(item)
+        let isAngry = emoji === "😡"
+        const fireA = "vYv"
+        const fireB = "YvY"
+        let isFire = emoji === fireA
+        if(isFire){
+            emoji = Math.random() > 0.5 ? fireB : emoji
+        }
         return <div key={item.image.alt+i} style={{
             userSelect: "none",
             zIndex: -(item.z),
             position: "fixed",
             fill: "yellow",
             opacity: item.z,
+            willChange: "left top transform",
             left: (item.x-w2-(item.textOverride ? 10 : 10))/(item.z**2)-(Math.cos((i/items.length)*Math.PI*2)*(item.z*2))+"px",
             top: (item.y-h2-(item.textOverride ? 10 : 10))/(item.z**2)-(Math.sin((i/items.length)*Math.PI*2)*(item.z*2))+"px",
             transform: `translate(${w2-((item.textOverride ? 50 : item.image.width||50)/2)}px, ${h2-((item.textOverride ? 50 : item.image.height||50)/2)}px) scale(${(1+(item.z**2))})`,
@@ -42,7 +51,15 @@ const Parallax = ({ dimensions, items, setItems, frame }: {
 // return [...items]
 //             })
         }}
-        >{(img.enabled ? (item.textOverride ? item.textOverride : <Image {...imgProps}/>) : item.isDead ?  "x" : getEmoji(item))}</div>
+        >
+            <div className="grid grid-cols-1 grid-rows-1">
+                <label className={"shadow-amber-50 shadow-xl text-sm text-center"} style={{
+                    color: (frame % 6000 < 3000) ? " white" : " black",
+                }}
+                    >{isFire ? "Ahhh": isAngry ? "Grrr" : item.name}</label>
+                <span className="text-center text-amber-500">{(img.enabled ? (item.textOverride ? item.textOverride : <Image {...imgProps}/>) : item.isDead ?  "x" : emoji)}</span>
+                </div>
+            </div>
     })}
    </div> 
 }
