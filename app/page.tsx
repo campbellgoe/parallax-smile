@@ -6,7 +6,7 @@ import { interact } from "@/emotions/interactions";
 import { updateMovement } from "@/emotions/movement";
 import { distance, getDominantEmotion, getPersonConfig } from "@/emotions/simulation";
 import { v4 as uuidv4 } from "uuid"
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 const collectRandomEmotions = () => {
   return { "joy": Math.random(), "sadness": Math.random(), "fear": Math.random(), "anger": Math.random(), "love": Math.random(), "fire": Math.random()*0.75, }
 }
@@ -16,7 +16,7 @@ export function updatePeople(
   width: number,
   height: number,
   frame: number,
-  pointer: { current: { lastX: number; lastY: number; down: boolean }}
+  pointer: RefObject<{ lastX: number; lastY: number; down: boolean }>
 ) {
   const next = structuredClone(people);
 
@@ -87,8 +87,8 @@ export default function HomePage() {
   const [fires, setFires] = useState<(ParallaxItem & Entity)[]>([])
   const pointer = useRef({
     down: false,
-    lastX: null,
-    lastY: null
+    lastX: -100,
+    lastY: -100
   })
   const handleDown = (e: any) => {
     const x = e.pageX || e.touches?.[0]?.pageX;
