@@ -2,11 +2,64 @@ import { Entity } from "@/components/Entities";
 import { getDominantEmotion } from "./simulation";
 export function updateMovement(
   person: Entity,
-  frame: number
+  frame: number,
+  pointer: { current: { lastX: number; lastY: number; down: boolean }}
 ) {
   const dominant =
     getDominantEmotion(person);
+const px = pointer.current.lastX;
+const py = pointer.current.lastY;
 
+const dx = person.x - px;
+const dy = person.y - py;
+
+const distToPerson = Math.hypot(dx, dy);
+
+if (distToPerson < 120 && distToPerson >10) {
+  const directionX = dx / distToPerson;
+  const directionY = dy / distToPerson;
+switch (dominant) {
+    case "joy":
+      person.x -= directionX * 0.5;
+  person.y -= directionY * 0.5;
+      break;
+
+    case "sadness":
+      person.x += directionX * 0.5;
+  person.y += directionY * 0.5;
+      break;
+
+    case "fear":
+      person.x += directionX;
+  person.y += directionY;
+      break;
+
+    case "anger":
+      person.x += directionX * 0.5;
+  person.y += directionY * 0.5;
+      break;
+
+    case "love":
+      person.x -= directionX * 0.25;
+  person.y -= directionY * 0.25;
+      break;
+
+  case "fire":
+  //   person.x += directionX * 1.5;
+  // person.y += directionY * 1.5;
+    break;
+  }
+  
+}
+    // const px = pointer.current.lastX
+    // const py = pointer.current.lastY
+    // const distToPerson = Math.hypot(person.x-px, person.y-py)
+    // const angleToPerson = Math.atan2(py, px) - Math.atan2(person.y, person.x);
+    // if(distToPerson < 120){
+    //   console.log('within radius', distToPerson)
+    //   person.x += Math.cos(angleToPerson)*10
+    //   person.y += Math.sin(angleToPerson)*10
+    // }
   switch (dominant) {
     case "joy":
       person.vx +=

@@ -15,7 +15,8 @@ export function updatePeople(
   people: Entity[],
   width: number,
   height: number,
-  frame: number
+  frame: number,
+  pointer: { current: { lastX: number; lastY: number; down: boolean }}
 ) {
   const next = structuredClone(people);
 
@@ -42,7 +43,7 @@ export function updatePeople(
   }
 
   for (const person of next) {
-    updateMovement(person, frame);
+    updateMovement(person, frame, pointer);
 
     person.x += person.vx;
     person.y += person.vy;
@@ -86,17 +87,24 @@ export default function HomePage() {
   const [fires, setFires] = useState<(ParallaxItem & Entity)[]>([])
   const pointer = useRef({
     down: false,
+    lastX: null,
+    lastY: null
   })
   const handleDown = (e: any) => {
     const x = e.pageX || e.touches?.[0]?.pageX;
     const y = e.pageY || e.touches?.[0]?.pageY;
+    pointer.current.lastX = x
+    pointer.current.lastY = y
     setPosition([x, y])
     pointer.current.down = true
   }
   const handleMove = (e: any) => {
-    if (!pointer.current.down) return
+    
     const x = e.pageX || e.touches?.[0]?.pageX;
     const y = e.pageY || e.touches?.[0]?.pageY;
+    pointer.current.lastX = x
+    pointer.current.lastY = y
+    if (!pointer.current.down) return
     // const id = setTimeout(() => {
     setPosition([x, y])
     setNAncestors(happies.length)
@@ -209,6 +217,7 @@ export default function HomePage() {
               window.innerWidth,
               window.innerHeight,
               frameInner,
+              pointer
             ) as typeof current,
           );
         // }

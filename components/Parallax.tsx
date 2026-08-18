@@ -43,8 +43,8 @@ const Parallax = ({ dimensions, items, setItems, frame }: {
             fill: "yellow",
             opacity: item.z,
             willChange: "left top transform",
-            left: (item.x-w2-(item.textOverride ? 10 : 10))/(item.z**2)-(Math.cos((i/items.length)*Math.PI*2)*(item.z*2))+"px",
-            top: (item.y-h2-(item.textOverride ? 10 : 10))/(item.z**2)-(Math.sin((i/items.length)*Math.PI*2)*(item.z*2))+"px",
+            left: (item.x-w2)/(item.z**2)+100+"px",
+            top: (item.y-h2)/(item.z**2)+100+"px",
             transform: `translate(${w2-((item.textOverride ? 50 : item.image.width||50)/2)}px, ${h2-((item.textOverride ? 50 : item.image.height||50)/2)}px) scale(${(1+(item.z**2))})`,
         }}
         onClick={() => {
