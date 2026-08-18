@@ -39,10 +39,10 @@ export function distance(
   );
 }
 
-export function getEmoji(
+export function getPersonConfig(
   person: Entity,
-) {
+): { emoji: string; color: string; names?: string[] } {
   return EMOTION_CONFIG[
     getDominantEmotion(person)
-  ].emoji;
+  ];
 }

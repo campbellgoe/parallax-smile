@@ -32,14 +32,16 @@ export const EMOTION_CONFIG = {
     color: "#EC407A",
   },
   fire: {
-    emoji: "vYv",
-    color: "orange"
+    emoji: "🔥",
+    color: "orange",
+    names: ["Ahhhh!", "Oh noes!"],
   }
 } satisfies Record<
   EmotionName,
   {
     emoji: string;
     color: string;
+    names?: string[]
   }
 >;
 
@@ -61,4 +63,5 @@ export type Entity = {
   isDead?: boolean;
   intensity?: number;
   name: string;
+  age: number;
 };

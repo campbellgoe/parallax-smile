@@ -4,7 +4,7 @@ import Parallax from "@/components/Parallax";
 import { type ParallaxItem } from "@/components/ParallaxItem";
 import { interact } from "@/emotions/interactions";
 import { updateMovement } from "@/emotions/movement";
-import { distance, getDominantEmotion } from "@/emotions/simulation";
+import { distance, getDominantEmotion, getPersonConfig } from "@/emotions/simulation";
 import { v4 as uuidv4 } from "uuid"
 import { useEffect, useRef, useState } from "react";
 const collectRandomEmotions = () => {
@@ -15,6 +15,7 @@ export function updatePeople(
   people: Entity[],
   width: number,
   height: number,
+  frame: number
 ) {
   const next = structuredClone(people);
 
@@ -41,7 +42,7 @@ export function updatePeople(
   }
 
   for (const person of next) {
-    updateMovement(person);
+    updateMovement(person, frame);
 
     person.x += person.vx;
     person.y += person.vy;
@@ -90,7 +91,6 @@ export default function HomePage() {
     const x = e.pageX || e.touches?.[0]?.pageX;
     const y = e.pageY || e.touches?.[0]?.pageY;
     setPosition([x, y])
-    console.log('clicked down at ', x, y)
     pointer.current.down = true
   }
   const handleMove = (e: any) => {
@@ -121,6 +121,7 @@ export default function HomePage() {
     }
   }, [happies])
   const [items, setItems] = useState<(ParallaxItem & Entity)[]>([])
+
   const handleUp = (e: any) => {
     if (!pointer.current.down) return
     const x = position[0]
@@ -149,7 +150,16 @@ export default function HomePage() {
           emotions: collectRandomEmotions(),
           name: Math.random() > 0.5 ? "Hi": "Hello",
         }
-        return [...(items.length > 32 ? items.slice(1) : items), newSmiley]
+        const personConfig = getPersonConfig(newSmiley)
+        // get random starting name from names list
+        const nNames = personConfig?.names?.length || 0
+        const index = Math.floor(Math.random()*nNames)
+        const name = personConfig?.names?.[index] || newSmiley.name
+        
+        return [...(items.length > 32 ? items.slice(1) : items), {
+          ...newSmiley,
+          name
+        }]
       })
     pointer.current.down = false
   }
@@ -190,19 +200,22 @@ export default function HomePage() {
         setH(window.innerHeight)
       }
       addEventListener("resize", resize, { signal: abortController.signal })
+      let frameInner = 0
       const loop = () => {
-        if (frame % 3 == 0) {
+        // if (frame % 3 == 0) {
           setHappies((current) =>
             updatePeople(
               current,
               window.innerWidth,
               window.innerHeight,
+              frameInner,
             ) as typeof current,
           );
-        }
+        // }
 
 
-        setFrame(frame => frame + 1)
+        setFrame(frameInner)
+        frameInner++;
         requestAnimationFrame(loop)
       }
       requestAnimationFrame(loop)
@@ -225,7 +238,6 @@ export default function HomePage() {
   // ]
 
   const makeSmiley = (z: number) => {
-    console.log('z', z)
     return {
       type: "dynamic" as "dynamic",
       x: position[0],
@@ -260,7 +272,7 @@ export default function HomePage() {
 
   return (
     <div style={{
-      background: frame % 6000 < 3000 ? "black" : "white",
+      background: frame % 6000 < 3000 ? "white" : "black",
       width: '100vw', height: '100dvh',
       transition: "all 5s ease-out",
     }} onTouchStart={handleDown}

@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction, useState } from "react"
 import { type ParallaxItem } from "./ParallaxItem";
 import Image from "next/image";
 import { Entity } from "./Entities";
-import { getEmoji } from "@/emotions/simulation";
+import { getPersonConfig } from "@/emotions/simulation";
 const svgImg = `data:image/svg+xml;utf8,<svg xmlns="http://w3.org" viewBox="0 0 32 32"><text y="28" font-size="28">😊</text></svg>`
 const Parallax = ({ dimensions, items, setItems, frame }: {
     frame: number;
@@ -27,10 +27,11 @@ const Parallax = ({ dimensions, items, setItems, frame }: {
             height: img.height,
             fill: img.fill
         }
-        let emoji = getEmoji(item)
+        const personConfig = getPersonConfig(item)
+        let emoji = personConfig.emoji
         let isAngry = emoji === "😡"
-        const fireA = "vYv"
-        const fireB = "YvY"
+        const fireA = "🔥"
+        const fireB = "🔥"
         let isFire = emoji === fireA
         if(isFire){
             emoji = Math.random() > 0.5 ? fireB : emoji
@@ -54,10 +55,10 @@ const Parallax = ({ dimensions, items, setItems, frame }: {
         >
             <div className="grid grid-cols-1 grid-rows-1">
                 <label className={"shadow-amber-50 shadow-xl text-sm text-center"} style={{
-                    color: (frame % 6000 < 3000) ? " white" : " black",
+                    color: (frame % 6000 < 3000) ? " black" : " white",
                 }}
-                    >{isFire ? "Ahhh": isAngry ? "Grrr" : item.name}</label>
-                <span className="text-center text-amber-500">{(img.enabled ? (item.textOverride ? item.textOverride : <Image {...imgProps}/>) : item.isDead ?  "x" : emoji)}</span>
+                    >{item.name}</label>
+                <span className="text-center text-amber-500" style={{color: personConfig.color}}>{(img.enabled ? (item.textOverride ? item.textOverride : <Image {...imgProps}/>) : item.isDead ?  "x" : emoji)}</span>
                 </div>
             </div>
     })}
