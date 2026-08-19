@@ -40,7 +40,7 @@ switch (dominant) {
       break;
 
     case "love":
-      person.x -= directionX * 0.25;
+      person.x -= directionX * 0.125;
   person.y -= directionY * 0.25;
       break;
 

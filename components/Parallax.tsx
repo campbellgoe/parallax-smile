@@ -9,60 +9,62 @@ const svgImg = `data:image/svg+xml;utf8,<svg xmlns="http://w3.org" viewBox="0 0 
 const Parallax = ({ dimensions, items, setItems, frame }: {
     frame: number;
     dimensions: [w: number, h: number];
-    items: (ParallaxItem & Entity)[], setItems: Dispatch<SetStateAction<(ParallaxItem & Entity)[]>>}) => {
-        const [w, h] = dimensions 
-    let w2 = w/2 
-    let h2 = h/2
-        if(typeof window != 'undefined'){
-         w2 = window.innerWidth/2
-         h2 = window.innerHeight/2
-        }
-   return <div>
-    {items.map((item, i) => {
-        const img = item.image
-        const imgProps =  {
-            src: (img.src || svgImg) as string,
-            alt: img.alt,
-            width: img.width,
-            height: img.height,
-            fill: img.fill
-        }
-        const personConfig = getPersonConfig(item)
-        let emoji = personConfig.emoji
-        let isAngry = emoji === "😡"
-        const fireA = "🔥"
-        const fireB = "🔥"
-        let isFire = emoji === fireA
-        if(isFire){
-            emoji = Math.random() > 0.5 ? fireB : emoji
-        }
-        return <div key={item.image.alt+i} style={{
-            userSelect: "none",
-            zIndex: Math.floor(item.y),
-            position: "fixed",
-            fill: "yellow",
-            opacity: item.z,
-            willChange: "left top transform",
-            left: (item.x-w2)/(item.z**2)+100+"px",
-            top: (item.y-h2)/(item.z**2)+100+"px",
-            transform: `translate(${w2-((item.textOverride ? 50 : item.image.width||50)/2)}px, ${h2-((item.textOverride ? 50 : item.image.height||50)/2)}px) scale(${(1+(item.z**2))})`,
-        }}
-        onClick={() => {
-//             setItems?.((items) => {
-// return [...items]
-//             })
-        }}
-        >
-            <div className="grid grid-cols-1 grid-rows-1">
-                <label className={"shadow-amber-50 shadow-xl text-sm text-center"} style={{
-                    color: (frame % 6000 < 3000) ? " black" : " white",
+    items: (ParallaxItem & Entity)[], setItems: Dispatch<SetStateAction<(ParallaxItem & Entity)[]>>
+}) => {
+    const [w, h] = dimensions
+    let w2 = w / 2
+    let h2 = h / 2
+    if (typeof window != 'undefined') {
+        w2 = window.innerWidth / 2
+        h2 = window.innerHeight / 2
+    }
+    return <div>
+        {items.map((item, i) => {
+            const img = item.image
+            const imgProps = {
+                src: (img.src || svgImg) as string,
+                alt: img.alt,
+                width: img.width,
+                height: img.height,
+                fill: img.fill
+            }
+            const personConfig = getPersonConfig(item)
+            let emoji = personConfig.emoji
+            let isAngry = emoji === "😡"
+            const fireA = "🔥"
+            const fireB = "🔥"
+            let isFire = emoji === fireA
+            if (isFire) {
+                emoji = Math.random() > 0.5 ? fireB : emoji
+            }
+            return <div key={item.image.alt + i} style={{
+                userSelect: "none",
+                zIndex: Math.floor(item.y),
+                position: "fixed",
+                fill: "yellow",
+                opacity: item.z,
+                willChange: "left top transform",
+                left: (item.x - w2) / (item.z ** 2) + 100 + "px",
+                top: (item.y - h2) / (item.z ** 2) + 100 + "px",
+                transform: `translate(${w2 - ((item.textOverride ? 50 : item.image.width || 50) / 2)}px, ${h2 - ((item.textOverride ? 50 : item.image.height || 50) / 2)}px) scale(${(1 + (item.z ** 2))})`,
+            }}
+                onClick={() => {
+                    //             setItems?.((items) => {
+                    // return [...items]
+                    //             })
                 }}
-                    >{item.name}</label>
-                <span className="text-center text-amber-500" style={{color: personConfig.color}}>{(img.enabled ? (item.textOverride ? item.textOverride : <Image {...imgProps}/>) : item.isDead ?  "x" : emoji)}</span>
-                </div>
+                className="grid grid-cols-1 grid-rows-1"
+            >
+                    <label className={"shadow-amber-50 shadow-xl text-xs text-center self-center"} style={{
+                        color: (frame % 6000 < 3000) ? " black" : " white",
+                    }}
+                    >{item.name || '\u00A0'}</label>
+                    <span className="text-center text-amber-500 self-center" style={{ color: personConfig.color }}>
+                    {(img.enabled ? (item.textOverride ? item.textOverride : <Image {...imgProps} />) : item.isDead ? "x" : emoji)}</span>
+                    
             </div>
-    })}
-   </div> 
+        })}
+    </div>
 }
 
 export default Parallax

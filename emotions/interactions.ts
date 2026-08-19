@@ -34,34 +34,42 @@ export function interact(
 
   const distBetween = Math.hypot(dx, dy);
 
-  if (distBetween < 500 && distBetween > 10) {
+  if (distBetween > 50) {
     const directionX = dx / distBetween;
     const directionY = dy / distBetween;
-    if (dominant === 'fear') {
-      if (targetDominant === 'anger') {
-        source.x += directionX * 0.25;
-        source.y += directionY * 0.25;
-      } else if (targetDominant === 'fire') {
-        source.x += directionX;
-        source.y += directionY;
-      } else {
-        source.x -= directionX * 0.01;
-        source.y -= directionY * 0.01;
+    if (distBetween < 100) {
+      if (dominant === 'fear') {
+        if (targetDominant === 'anger') {
+          source.x += directionX * 0.25;
+          source.y += directionY * 0.25;
+        } else if (targetDominant === 'fire') {
+          source.x += directionX;
+          source.y += directionY;
+        } else {
+          source.x -= directionX * 0.01;
+          source.y -= directionY * 0.01;
+        }
+      }
+      if (dominant === 'anger') {
+        if (targetDominant === 'fear') {
+          source.x -= directionX * 0.25;
+          source.y -= directionY * 0.25;
+        } else {
+          // source.x -= directionX * 0.01;
+          // source.y -= directionY * 0.01;
+        }
+      }
+      if (distBetween > 75){
+        if((dominant === 'joy' || dominant === 'love') && (targetDominant === 'joy' || targetDominant === 'love')) {
+          source.x -= directionX * 0.03;
+          source.y -= directionY * 0.03;
+        }
       }
     }
-    if (dominant === 'anger') {
-      if (targetDominant === 'fear') {
-        source.x -= directionX * 0.25;
-        source.y -= directionY * 0.25;
-      } else {
-        // source.x -= directionX * 0.01;
-        // source.y -= directionY * 0.01;
-      }
-    }
-    if(distBetween > 25 && dominant === 'joy' || dominant === 'love'){
-      if(targetDominant === 'joy' || targetDominant === 'love'){
-         source.x -= directionX * 0.1;
-         source.y -= directionY * 0.1;
+    if (distBetween < 125) {
+      if (dominant != 'fire' && targetDominant === 'fire') {
+        source.x += directionX * 2;
+        source.y += directionY * 2;
       }
     }
   }

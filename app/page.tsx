@@ -16,7 +16,7 @@ export function updatePeople(
   width: number,
   height: number,
   frame: number,
-  pointer: RefObject<{ lastX: number; lastY: number; down: boolean }>
+  pointer: RefObject<{ lastX: number; lastY: number; down: boolean }>,
 ) {
   const next = structuredClone(people);
 
@@ -35,13 +35,13 @@ export function updatePeople(
         personB,
       );
 
-      if (d > 100) continue;
+      if (d > 150) continue;
 
       interact(personA, personB);
       interact(personB, personA);
     }
   }
-
+const padding = 120
   for (const person of next) {
     updateMovement(person, frame, pointer);
 
@@ -50,25 +50,24 @@ export function updatePeople(
 
     person.vx *= 0.98;
     person.vy *= 0.98;
-
-    if (person.x < 0) {
-      person.x = width-10;
-      // person.vx *= -1;
+    if (person.x < padding) {
+      person.x = padding
+      person.vx = Math.abs(person.vx)
     }
 
-    if (person.x > width) {
-      person.x = 10;
-      // person.vx *= -1;
+    if (person.x > width-padding) {
+      person.x = width-padding;
+      person.vx = -Math.abs(person.vx)
     }
 
-    if (person.y < 0) {
-      person.y = height-10;
-      // person.vy *= -1;
+    if (person.y < padding) {
+      person.y = padding;
+      person.vy = Math.abs(person.vy)
     }
 
-    if (person.y > height) {
-      person.y = 10;
-      // person.vy *= -1;
+    if (person.y > height-padding) {
+      person.y = height-padding;
+      person.vy = -Math.abs(person.vy)
     }
   }
 
@@ -108,10 +107,10 @@ export default function HomePage() {
     // const id = setTimeout(() => {
     setPosition([x, y])
     setNAncestors(happies.length)
-    if (frame % 7 == 0 && enableSmileWinState) {
-      setSmileys(s => {
-        return (s.length < nAncestors) ? [...s, (s.at(-1) || 0) - 0.01] : [...s.slice(1, s.length - 3), (s.at(-1) || 0) + 0.01]
-      })
+    if (enableSmileWinState) {
+      // setSmileys(s => {
+      //   return (s.length < nAncestors) ? [...s, (s.at(-1) || 0) - 0.01] : [...s.slice(1, s.length - 3), (s.at(-1) || 0) + 0.01]
+      // })
       console.log("win")
     }
     // }, 1000 / 60)
@@ -119,7 +118,7 @@ export default function HomePage() {
 
   }
   useEffect(() => {
-    if (happies.length > 16 && happies.every(person => {
+    if (happies.length >= 8 && happies.every(person => {
       const emotion = getDominantEmotion(person)
       return emotion === "joy" || emotion === "love"
     })) {
@@ -201,6 +200,7 @@ export default function HomePage() {
   //   }
   // }
   // }
+  let rafId = useRef<number | null>(null)
   useEffect(() => {
     if (typeof window != 'undefined') {
       const resize = () => {
@@ -217,7 +217,7 @@ export default function HomePage() {
               window.innerWidth,
               window.innerHeight,
               frameInner,
-              pointer
+              pointer,
             ) as typeof current,
           );
         // }
@@ -225,11 +225,14 @@ export default function HomePage() {
 
         setFrame(frameInner)
         frameInner++;
-        requestAnimationFrame(loop)
+        rafId.current = requestAnimationFrame(loop)
       }
-      requestAnimationFrame(loop)
+      rafId.current = requestAnimationFrame(loop)
       return () => {
         abortController.abort()
+        if(typeof rafId.current == 'number'){
+          cancelAnimationFrame(rafId.current)
+        }
         // removeEventListener("resize", resize, false)
       }
     }
