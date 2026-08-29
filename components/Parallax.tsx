@@ -39,7 +39,7 @@ const Parallax = ({ dimensions, items, setItems, frame }: {
             }
             return <div key={item.image.alt + i} style={{
                 userSelect: "none",
-                zIndex: Math.floor(item.y),
+                zIndex: item.y > 0 ? Math.floor(item.y) : 0,
                 position: "fixed",
                 fill: "yellow",
                 opacity: item.z,

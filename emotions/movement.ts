@@ -117,6 +117,10 @@ person.name = Math.random() > 0.5 ? "uh oh" : ":("
       person.name = Math.random() > 0.5 ? "Ahhh" : "Oh no!"
     }
     break;
+  case "plant":
+    person.vx *= 0.9;
+    person.vy *= 0.9;
+    break;
   }
   person.age ++
 }

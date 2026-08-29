@@ -13,9 +13,29 @@ export function interact(
     influenceMatrix[dominant];
 
   for (const emotion of EMOTIONS) {
-    target.emotions[emotion] +=
+    switch(typeof influences[emotion]){
+      case 'function': {
+        const currentValue = target.emotions[emotion]
+        // @ts-ignore
+        target.emotions[emotion] = currentValue + influences[emotion]?.(currentValue);
+        break;
+      }
+      case 'number': {
+        // TODO: opposite mode e.g. -=
+        target.emotions[emotion] +=
       influences[emotion];
+        break;
+      }
+      default: {
+        console.warn("Invalid type given from influences")
+        break;
+      }
+      
+    }
+    
+if(emotion === 'plant'){
 
+} else {
     target.emotions[emotion] =
       Math.max(
         0,
@@ -25,6 +45,7 @@ export function interact(
         ),
       );
   }
+}
   const targetDominant = getDominantEmotion(target)
   const px = target.x;
   const py = target.y;
@@ -34,9 +55,16 @@ export function interact(
 
   const distBetween = Math.hypot(dx, dy);
 
-  if (distBetween > 50) {
+  if(distBetween <= 200){
+    if(targetDominant == 'plant'){
+      target.emotions.plant += 0.01
+    } else {
+      source.emotions.plant -= 0.01
+    }
+  }
     const directionX = dx / distBetween;
     const directionY = dy / distBetween;
+  if (distBetween > 50) {
     if (distBetween < 100) {
       if (dominant === 'fear') {
         if (targetDominant === 'anger') {
@@ -67,11 +95,14 @@ export function interact(
       }
     }
     if (distBetween < 125) {
-      if (dominant != 'fire' && targetDominant === 'fire') {
+      if (dominant !== 'plant' && dominant != 'fire' && targetDominant === 'fire') {
         source.x += directionX * 2;
         source.y += directionY * 2;
       }
     }
+  } else {
+source.x += directionX * 0.01;
+          source.y += directionY * 0.01;
   }
 
 }

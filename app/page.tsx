@@ -8,7 +8,7 @@ import { distance, getDominantEmotion, getPersonConfig } from "@/emotions/simula
 import { v4 as uuidv4 } from "uuid"
 import { RefObject, useEffect, useRef, useState } from "react";
 const collectRandomEmotions = () => {
-  return { "joy": Math.random(), "sadness": Math.random(), "fear": Math.random(), "anger": Math.random(), "love": Math.random(), "fire": Math.random()*0.75, }
+  return { "joy": Math.random(), "sadness": Math.random(), "fear": Math.random(), "anger": Math.random(), "love": Math.random(), "fire": Math.random()*0.33, plant: (Math.random()**0.5)*(0.95) }
 }
 const abortController = new AbortController()
 export function updatePeople(
@@ -163,7 +163,7 @@ export default function HomePage() {
         const index = Math.floor(Math.random()*nNames)
         const name = personConfig?.names?.[index] || newSmiley.name
         
-        return [...(items.length > 32 ? items.slice(1) : items), {
+        return [...(items.length > 64 ? items.slice(1) : items), {
           ...newSmiley,
           name
         }]

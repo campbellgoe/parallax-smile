@@ -4,7 +4,8 @@ export type EmotionName =
   | "fear"
   | "anger"
   | "love"
-  | "fire";
+  | "fire"
+  | "plant";
 
 export const EMOTION_CONFIG = {
   joy: {
@@ -35,6 +36,10 @@ export const EMOTION_CONFIG = {
     emoji: "🔥",
     color: "orange",
     names: ["Ahhhh!", "Oh noes!"],
+  },
+  plant: {
+    emoji: "🌱",
+    color: "green",
   }
 } satisfies Record<
   EmotionName,
@@ -52,7 +57,7 @@ export type EmotionLevels = Record<
 
 export type Entity = {
   id: string;
-  type: 'smiley' | 'dynamic' | 'fire'
+  type: 'smiley' | 'dynamic' | 'fire' | 'plant'
   x: number;
   y: number;
 

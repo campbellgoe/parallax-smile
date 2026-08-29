@@ -6,7 +6,8 @@ export const EMOTIONS: EmotionName[] = [
   "fear",
   "anger",
   "love",
-  "fire"
+  "fire",
+  "plant"
 ];
 // export function getDominantEmotion(
 //   person: Person,
